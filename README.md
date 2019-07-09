@@ -156,9 +156,9 @@ $ tree
 
 ### Example output
 
-![_annotated_01](https://user-images.githubusercontent.com/2827521/60886987-40ef6f80-a28e-11e9-9e13-7b20c3efbd2a.jpg)
+![_annotated_01](https://user-images.githubusercontent.com/2827521/60887197-b3604f80-a28e-11e9-806c-c3c49f99211a.jpg)
 
-![_annotated_02](https://user-images.githubusercontent.com/2827521/60887099-7eec9380-a28e-11e9-89ff-ce84e0e2787d.jpg)
+![_annotated_02](https://user-images.githubusercontent.com/2827521/60887212-c115d500-a28e-11e9-8ce9-93063035cd23.jpg)
 
 
 ## Environment variables
