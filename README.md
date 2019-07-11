@@ -31,8 +31,14 @@ face-detect-annotator
 
 # What's for?
 
-This tool checks IAM policy and create CSV list of policies having broader permissions and attached users.
-You can use this to improve security and audit report.
+Amazon advertise like "Our product is awesome!".
+
+Google advocates like "Our AI is brilliant!!".
+
+ML engineer says like "My top-noch model reach beyond the existing world!!!".
+
+You may think, "Who is the winner?".
+Okay, let's decide the No.1.
 
 
 # Quick Usage
