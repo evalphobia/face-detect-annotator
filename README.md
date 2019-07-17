@@ -37,6 +37,7 @@ Google advocates like "Our AI is brilliant!!".
 
 ML engineer says like "My top-noch model reach beyond the existing world!!!".
 
+
 You may think, "Who is the winner?".
 Okay, let's decide the No.1.
 
@@ -54,7 +55,11 @@ And install dependensies.
 Then, create binary file.
 
 ```bash
-$ go build .
+# Basic engines [pigo,azure,google,rekognition] (you can use these engines without OS dependencies or libraries)
+$ go build -o face-detect-annotator ./cmd/face-detect-annotator-basic
+
+# All engines
+# $ go build -o face-detect-annotator ./cmd/face-detect-annotator-all
 ```
 
 ```bash
@@ -172,14 +177,16 @@ $ tree
 | Name | Command | Description |
 |:--|:--|:--|
 | `FDA_ENGINE_ALL` | `detect` | Use all of the face detection engines. |
-| `FDA_ENGINE_OPENCV` | `detect` | Use OpenCV. |
 | `FDA_ENGINE_DLIB` | `detect` | Use Dlib. |
+| `FDA_ENGINE_OPENCV` | `detect` | Use OpenCV. |
+| `FDA_ENGINE_PIGO` | `detect` | Use Pigo. |
 | `FDA_ENGINE_TF` | `detect` | Use TensorFlow. |
 | `FDA_ENGINE_REKOGNITION` | `detect` | Use AWS Rekognition. |
 | `FDA_ENGINE_GOOGLE` | `detect` | Use Google Vision API. |
 | `FDA_ENGINE_AZURE` | `detect` | Use Azure Computer Vision API. |
-| `FDA_OPENCV_CASCADE_FILE` | `detect` for OpenCV | Specify the file path of a cascade file of OpenCV. |
 | `FDA_DLIB_MODEL_DIR` | `detect` for Dlib | Specify the directory path of model files for Dlib. |
+| `FDA_PIGO_CASCADE_FILE` | `detect` for Pigo | Specify the file path of a cascade file of Pigo. |
+| `FDA_OPENCV_CASCADE_FILE` | `detect` for OpenCV | Specify the file path of a cascade file of OpenCV. |
 | `FDA_TF_MODEL_FILE` | `detect` for TensorFloe | Specify the .pb file path of a model file for TensorFlow. |
 | `FDA_AZURE_REGION` | `detect` for Azure | Specify the region for Azure. |
 | `FDA_AZURE_SUBSCRIPTION_KEY` | `detect` for Azure | Specify the subscription key for Azure. |
@@ -189,8 +196,9 @@ $ tree
 
 This library depends on these awesome libraries,
 
-- OpenCV: [gocv.io/x/gocv](https://gocv.io/)
 - Dlib: [github.com/Kagami/go-face](https://github.com/Kagami/go-face) by [Kagami](https://github.com/Kagami)
+- OpenCV: [gocv.io/x/gocv](https://gocv.io/)
+- Pigo: [github.com/esimov/pigo](https://github.com/esimov/pigo)
 - TensorFlow: [github.com/tensorflow/tensorflow](https://github.com/tensorflow/tensorflow)
 - Azure Computer Vision API: [github.com/Azure/azure-sdk-for-go](https://github.com/Azure/azure-sdk-for-go)
 - Google Vision API: [github.com/googleapis/google-api-go-client](https://github.com/googleapis/google-api-go-client)

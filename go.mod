@@ -9,6 +9,7 @@ require (
 	github.com/Bowery/prompt v0.0.0-20190419144237-972d0ceb96f5 // indirect
 	github.com/Kagami/go-face v0.0.0-20190308235700-97bf298c303b
 	github.com/aws/aws-sdk-go v1.20.16 // indirect
+	github.com/esimov/pigo v1.1.0
 	github.com/evalphobia/aws-sdk-go-wrapper v1.6.4
 	github.com/evalphobia/google-api-go-wrapper v0.6.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0

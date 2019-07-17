@@ -15,8 +15,8 @@ type Config interface {
 }
 
 type OpenCVFaceDetector struct {
-	classifier gocv.CascadeClassifier
 	mu         sync.Mutex
+	classifier gocv.CascadeClassifier
 }
 
 func (d *OpenCVFaceDetector) Init(conf engine.Config) error {

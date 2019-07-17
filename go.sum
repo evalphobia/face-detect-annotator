@@ -43,6 +43,8 @@ github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZm
 github.com/eapache/go-resiliency v1.1.0/go.mod h1:kFI+JgMyC7bLPUVY133qvEBtVayf5mFgVsvEsIPBvNs=
 github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21/go.mod h1:+020luEh2TKB4/GOp8oxxtq0Daoen/Cii55CzbTV6DU=
 github.com/eapache/queue v1.1.0/go.mod h1:6eCeP0CKFpHLu8blIFXhExK/dRa7WDZfr6jVFPTqq+I=
+github.com/esimov/pigo v1.1.0 h1:NIAQiC8giUWQz5T+DcN2WAzYkxb8fCYTO0gniw7x4BI=
+github.com/esimov/pigo v1.1.0/go.mod h1:/weGpc3orB7x946PS43s7thO/9xQzjQyc4ZFU4kkUCo=
 github.com/evalphobia/aws-sdk-go-wrapper v1.6.4 h1:PPNT4urN0NMsHILf/S2+n8UFnzvvpPyObs44JwNCHz0=
 github.com/evalphobia/aws-sdk-go-wrapper v1.6.4/go.mod h1:TkayNiFwRHa4b+5qhDfNucvo1rYZmLxxAzXzukzcFA8=
 github.com/evalphobia/google-api-go-wrapper v0.6.0 h1:krEPlT7ZveLoxDMFqCUQkaZiEf+lxb2CtSzLWBsbjzM=

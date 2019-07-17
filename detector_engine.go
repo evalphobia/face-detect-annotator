@@ -21,6 +21,7 @@ func initEngines(conf Config, enabledEngines []engine.Engine) ([]engine.Engine, 
 			e.String() == "google" && conf.UseEngineGoogleVision,
 			e.String() == "rekognition" && conf.UseEngineRekognition,
 			e.String() == "dlib" && conf.UseEngineDlib,
+			e.String() == "pigo" && conf.UseEnginePigo,
 			e.String() == "opencv" && conf.UseEngineOpenCV,
 			e.String() == "tensorflow" && conf.UseEngineTensorFlow:
 			err := e.Init(conf)

@@ -13,6 +13,7 @@ const (
 	keyConfigEngineAzureVision  = "FDA_ENGINE_AZURE"
 	keyConfigEngineGoogleVision = "FDA_ENGINE_GOOGLE"
 	keyConfigEngineRekognition  = "FDA_ENGINE_REKOGNITION"
+	keyConfigEnginePigo         = "FDA_ENGINE_PIGO"
 
 	// Extentions
 	keyConfigEngineDlib       = "FDA_ENGINE_DLIB"
@@ -25,6 +26,9 @@ const (
 	keyConfigAzureSubscriptionKey = "FDA_AZURE_SUBSCRIPTION_KEY"
 	defaultAzureRegion            = "eastus"
 
+	keyConfigPigoCascadeFilePath = "FDA_PIGO_CASCADE_FILE"
+	defaultPigoCascadeFilePath   = "models/facefinder"
+
 	keyConfigDlibModelDir = "FDA_DLIB_MODEL_DIR"
 	defaultDlibModelDir   = "models"
 
@@ -36,45 +40,54 @@ const (
 )
 
 type Config struct {
-	InputPath             string
-	OutputPath            string
-	UseEngineOpenCV       bool
-	UseEngineDlib         bool
-	UseEngineTensorFlow   bool
-	UseEngineRekognition  bool
-	UseEngineGoogleVision bool
+	InputPath  string
+	OutputPath string
+
 	UseEngineAzureVision  bool
-	OpneCVCascadeFilePath string
-	DlibModelDir          string
-	TensorFlowModelPath   string
+	UseEngineGoogleVision bool
+	UseEngineRekognition  bool
+	UseEnginePigo         bool
+	UseEngineDlib         bool
+	UseEngineOpenCV       bool
+	UseEngineTensorFlow   bool
+
 	AzureRegion           string
 	AzureSubscriptionKey  string
+	PigoCascadeFilePath   string
+	DlibModelDir          string
+	OpneCVCascadeFilePath string
+	TensorFlowModelPath   string
 }
 
 func NewConfig() Config {
-	useOpenCV, _ := strconv.ParseBool(os.Getenv(keyConfigEngineOpenCV))
-	useDlib, _ := strconv.ParseBool(os.Getenv(keyConfigEngineDlib))
-	useTF, _ := strconv.ParseBool(os.Getenv(keyConfigEngineTensorFlow))
-	useRekognition, _ := strconv.ParseBool(os.Getenv(keyConfigEngineRekognition))
-	useGoogle, _ := strconv.ParseBool(os.Getenv(keyConfigEngineGoogleVision))
 	useAzure, _ := strconv.ParseBool(os.Getenv(keyConfigEngineAzureVision))
+	useGoogle, _ := strconv.ParseBool(os.Getenv(keyConfigEngineGoogleVision))
+	useRekognition, _ := strconv.ParseBool(os.Getenv(keyConfigEngineRekognition))
+	usePigo, _ := strconv.ParseBool(os.Getenv(keyConfigEnginePigo))
+	useDlib, _ := strconv.ParseBool(os.Getenv(keyConfigEngineDlib))
+	useOpenCV, _ := strconv.ParseBool(os.Getenv(keyConfigEngineOpenCV))
+	useTF, _ := strconv.ParseBool(os.Getenv(keyConfigEngineTensorFlow))
+
 	useAll, _ := strconv.ParseBool(os.Getenv(keyConfigEngineAll))
 	if useAll {
-		useOpenCV = true
-		useDlib = true
-		useTF = true
-		useRekognition = true
-		useGoogle = true
 		useAzure = true
+		useGoogle = true
+		useRekognition = true
+		usePigo = true
+		useDlib = true
+		useOpenCV = true
+		useTF = true
 	}
 
 	return Config{
-		UseEngineOpenCV:       useOpenCV,
-		UseEngineDlib:         useDlib,
-		UseEngineTensorFlow:   useTF,
-		UseEngineRekognition:  useRekognition,
-		UseEngineGoogleVision: useGoogle,
 		UseEngineAzureVision:  useAzure,
+		UseEngineGoogleVision: useGoogle,
+		UseEngineRekognition:  useRekognition,
+		UseEnginePigo:         usePigo,
+		UseEngineDlib:         useDlib,
+		UseEngineOpenCV:       useOpenCV,
+		UseEngineTensorFlow:   useTF,
+		PigoCascadeFilePath:   os.Getenv(keyConfigPigoCascadeFilePath),
 		OpneCVCascadeFilePath: os.Getenv(keyConfigOpenCVCascadeFilePath),
 		DlibModelDir:          os.Getenv(keyConfigDlibModelDir),
 		TensorFlowModelPath:   os.Getenv(keyConfigTensorFlowModelFilePath),
@@ -93,16 +106,18 @@ func (c *Config) setOutputPath(s string) {
 
 func (c *Config) setUseEngineFromName(name string) error {
 	switch name {
-	case "opencv":
-		c.UseEngineOpenCV = true
-	case "dlib":
-		c.UseEngineDlib = true
-	case "rekognition":
-		c.UseEngineRekognition = true
-	case "google":
-		c.UseEngineGoogleVision = true
 	case "azure":
 		c.UseEngineAzureVision = true
+	case "google":
+		c.UseEngineGoogleVision = true
+	case "rekognition":
+		c.UseEngineRekognition = true
+	case "pigo":
+		c.UseEnginePigo = true
+	case "dlib":
+		c.UseEngineDlib = true
+	case "opencv":
+		c.UseEngineOpenCV = true
 	case "tensorflow":
 		c.UseEngineTensorFlow = true
 	default:
@@ -128,6 +143,13 @@ func (c Config) GetAzureRegion() string {
 
 func (c Config) GetAzureSubscriptionKey() string {
 	return c.AzureSubscriptionKey
+}
+
+func (c Config) GetPigoCascadeFile() string {
+	if c.PigoCascadeFilePath != "" {
+		return c.PigoCascadeFilePath
+	}
+	return defaultPigoCascadeFilePath
 }
 
 func (c Config) GetDlibModelDir() string {
