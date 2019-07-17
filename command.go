@@ -1,4 +1,4 @@
-package main
+package fda
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/mkideal/cli"
 )
 
-func main() {
+func Run() {
 	if err := cli.Root(root,
 		cli.Tree(help),
 		cli.Tree(detector),

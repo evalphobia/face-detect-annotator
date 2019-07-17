@@ -1,4 +1,4 @@
-package main
+package fda
 
 import (
 	"fmt"
@@ -8,24 +8,31 @@ import (
 )
 
 const (
-	keyConfigEngineAll          = "FDA_ENGINE_ALL"
-	keyConfigEngineOpenCV       = "FDA_ENGINE_OPENCV"
-	keyConfigEngineDlib         = "FDA_ENGINE_DLIB"
-	keyConfigEngineRekognition  = "FDA_ENGINE_REKOGNITION"
-	keyConfigEngineGoogleVision = "FDA_ENGINE_GOOGLE"
+	keyConfigEngineAll = "FDA_ENGINE_ALL"
+	// Basics
 	keyConfigEngineAzureVision  = "FDA_ENGINE_AZURE"
-	keyConfigEngineTensorFlow   = "FDA_ENGINE_TF"
+	keyConfigEngineGoogleVision = "FDA_ENGINE_GOOGLE"
+	keyConfigEngineRekognition  = "FDA_ENGINE_REKOGNITION"
 
-	keyConfigOpenCVCascadeFilePath   = "FDA_OPENCV_CASCADE_FILE"
-	keyConfigDlibModelDir            = "FDA_DLIB_MODEL_DIR"
-	keyConfigTensorFlowModelFilePath = "FDA_TF_MODEL_FILE"
-	keyConfigAzureRegion             = "FDA_AZURE_REGION"
-	keyConfigAzureSubscriptionKey    = "FDA_AZURE_SUBSCRIPTION_KEY"
+	// Extentions
+	keyConfigEngineDlib       = "FDA_ENGINE_DLIB"
+	keyConfigEngineOpenCV     = "FDA_ENGINE_OPENCV"
+	keyConfigEngineTensorFlow = "FDA_ENGINE_TF"
+)
 
+const (
+	keyConfigAzureRegion          = "FDA_AZURE_REGION"
+	keyConfigAzureSubscriptionKey = "FDA_AZURE_SUBSCRIPTION_KEY"
+	defaultAzureRegion            = "eastus"
+
+	keyConfigDlibModelDir = "FDA_DLIB_MODEL_DIR"
+	defaultDlibModelDir   = "models"
+
+	keyConfigOpenCVCascadeFilePath = "FDA_OPENCV_CASCADE_FILE"
 	defaultOpenCVCascadeFilePath   = "models/opencv.xml"
-	defaultDlibModelDir            = "models"
-	defaultTensorFlowModelFilePath = "models/tensorflow.pb"
-	defaultAzureRegion             = "eastus"
+
+	keyConfigTensorFlowModelFilePath = "FDA_TF_MODEL_FILE"
+	defaultTensorFlowModelFilePath   = "models/tensorflow.pb"
 )
 
 type Config struct {
@@ -76,15 +83,15 @@ func NewConfig() Config {
 	}
 }
 
-func (c *Config) SetInputPath(s string) {
+func (c *Config) setInputPath(s string) {
 	c.InputPath = s
 }
 
-func (c *Config) SetOutputPath(s string) {
+func (c *Config) setOutputPath(s string) {
 	c.OutputPath = s
 }
 
-func (c *Config) SetUseEngineFromName(name string) error {
+func (c *Config) setUseEngineFromName(name string) error {
 	switch name {
 	case "opencv":
 		c.UseEngineOpenCV = true
@@ -104,7 +111,7 @@ func (c *Config) SetUseEngineFromName(name string) error {
 	return nil
 }
 
-func (c Config) IsCSVFilePath() bool {
+func (c Config) isCSVFilePath() bool {
 	switch path.Ext(c.InputPath) {
 	case ".csv", ".tsv":
 		return true
@@ -112,11 +119,15 @@ func (c Config) IsCSVFilePath() bool {
 	return false
 }
 
-func (c Config) GetOpenCVCascadeFile() string {
-	if c.OpneCVCascadeFilePath != "" {
-		return c.OpneCVCascadeFilePath
+func (c Config) GetAzureRegion() string {
+	if c.AzureRegion != "" {
+		return c.AzureRegion
 	}
-	return defaultOpenCVCascadeFilePath
+	return defaultAzureRegion
+}
+
+func (c Config) GetAzureSubscriptionKey() string {
+	return c.AzureSubscriptionKey
 }
 
 func (c Config) GetDlibModelDir() string {
@@ -126,16 +137,16 @@ func (c Config) GetDlibModelDir() string {
 	return defaultDlibModelDir
 }
 
+func (c Config) GetOpenCVCascadeFile() string {
+	if c.OpneCVCascadeFilePath != "" {
+		return c.OpneCVCascadeFilePath
+	}
+	return defaultOpenCVCascadeFilePath
+}
+
 func (c Config) GetTensorFlowModelFile() string {
 	if c.TensorFlowModelPath != "" {
 		return c.TensorFlowModelPath
 	}
 	return defaultTensorFlowModelFilePath
-}
-
-func (c Config) GetAzureRegion() string {
-	if c.AzureRegion != "" {
-		return c.AzureRegion
-	}
-	return defaultAzureRegion
 }

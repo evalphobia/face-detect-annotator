@@ -1,7 +1,8 @@
-package main
+package tensorflow
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"image"
 	"io/ioutil"
@@ -10,57 +11,67 @@ import (
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 	"golang.org/x/image/bmp"
+
+	"github.com/evalphobia/face-detect-annotator/engine"
 )
+
+type Config interface {
+	GetTensorFlowModelFile() string
+}
 
 type TensorFlowFaceDetector struct {
 	graph   *tf.Graph
 	session *tf.Session
 }
 
-func NewTensorFlowFaceDetector(modelPath string) (*TensorFlowFaceDetector, error) {
-	model, err := ioutil.ReadFile(modelPath)
+func (d *TensorFlowFaceDetector) Init(conf engine.Config) error {
+	c, ok := conf.(Config)
+	if !ok {
+		return errors.New("Incompatible config type for TensorFlowFaceDetector")
+	}
+
+	model, err := ioutil.ReadFile(c.GetTensorFlowModelFile())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	graph := tf.NewGraph()
 	err = graph.Import(model, "")
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	session, err := tf.NewSession(graph, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &TensorFlowFaceDetector{
-		graph:   graph,
-		session: session,
-	}, nil
+	d.graph = graph
+	d.session = session
+	return nil
 }
 
 func (d TensorFlowFaceDetector) String() string {
 	return "tensorflow"
 }
 
-func (d TensorFlowFaceDetector) Detect(imgPath string) (FaceResult, error) {
-	imgWidth, imgHeight, err := GetImageSize(imgPath)
+func (d TensorFlowFaceDetector) Detect(imgPath string) (engine.FaceResult, error) {
+	imgWidth, imgHeight, err := engine.GetImageSize(imgPath)
 	if err != nil {
-		return FaceResult{}, err
+		return engine.FaceResult{}, err
 	}
 
 	tensor, err := makeTensorFromFile(imgPath)
 	if err != nil {
-		return FaceResult{}, err
+		return engine.FaceResult{}, err
 	}
 
 	results, err := d.detectFaces(tensor)
 	if err != nil {
-		return FaceResult{}, err
+		return engine.FaceResult{}, err
 	}
 
-	faces := make([]FaceData, len(results))
+	faces := make([]engine.FaceData, len(results))
 	for i, r := range results {
 		x := r.PercentMinX * float64(imgWidth)
 		y := r.PercentMinY * float64(imgHeight)
@@ -69,7 +80,7 @@ func (d TensorFlowFaceDetector) Detect(imgPath string) (FaceResult, error) {
 		pw := float64(r.PercentMaxX - r.PercentMinX)
 		ph := float64(r.PercentMaxY - r.PercentMinY)
 
-		faces[i] = FaceData{
+		faces[i] = engine.FaceData{
 			X:             int(x),
 			Y:             int(y),
 			Width:         int(w),
@@ -80,7 +91,7 @@ func (d TensorFlowFaceDetector) Detect(imgPath string) (FaceResult, error) {
 		}
 	}
 
-	return FaceResult{
+	return engine.FaceResult{
 		EngineName: d.String(),
 		Faces:      faces,
 	}, nil

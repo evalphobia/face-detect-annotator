@@ -1,48 +1,50 @@
-package main
+package rekognition
 
 import (
 	"github.com/evalphobia/aws-sdk-go-wrapper/config"
 	"github.com/evalphobia/aws-sdk-go-wrapper/rekognition"
+
+	"github.com/evalphobia/face-detect-annotator/engine"
 )
 
 type RekognitionFaceDetector struct {
 	client *rekognition.Rekognition
 }
 
-func NewRekognitionFaceDetector() (*RekognitionFaceDetector, error) {
+func (d *RekognitionFaceDetector) Init(_ engine.Config) error {
 	cli, err := rekognition.New(config.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &RekognitionFaceDetector{
-		client: cli,
-	}, nil
+	d.client = cli
+	return nil
 }
 
 func (d RekognitionFaceDetector) String() string {
 	return "rekognition"
 }
 
-func (d RekognitionFaceDetector) Detect(imgPath string) (FaceResult, error) {
-	imgWidth, imgHeight, err := GetImageSize(imgPath)
+func (d RekognitionFaceDetector) Detect(imgPath string) (engine.FaceResult, error) {
+	emptyResult := engine.FaceResult{}
+	imgWidth, imgHeight, err := engine.GetImageSize(imgPath)
 	if err != nil {
-		return FaceResult{}, err
+		return emptyResult, err
 	}
 
 	resp, err := d.client.DetectFacesFromLocalFile(imgPath)
 	if err != nil {
-		return FaceResult{}, err
+		return emptyResult, err
 	}
 
-	faces := make([]FaceData, len(resp.List))
+	faces := make([]engine.FaceData, len(resp.List))
 	for i, r := range resp.List {
 		x := r.BoundingLeft * float64(imgWidth)
 		y := r.BoundingTop * float64(imgHeight)
 		pw := r.BoundingWidth
 		ph := r.BoundingHeight
 
-		faces[i] = FaceData{
+		faces[i] = engine.FaceData{
 			X:             int(x),
 			Y:             int(y),
 			Width:         int(float64(imgWidth) * pw),
@@ -53,7 +55,7 @@ func (d RekognitionFaceDetector) Detect(imgPath string) (FaceResult, error) {
 		}
 	}
 
-	return FaceResult{
+	return engine.FaceResult{
 		EngineName: d.String(),
 		Faces:      faces,
 	}, nil

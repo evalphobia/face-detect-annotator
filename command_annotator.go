@@ -1,4 +1,4 @@
-package main
+package fda
 
 import (
 	"encoding/json"
@@ -18,6 +18,8 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/gobold"
 	"golang.org/x/image/math/fixed"
+
+	"github.com/evalphobia/face-detect-annotator/engine"
 )
 
 var (
@@ -113,7 +115,7 @@ func annotateImage(path string, targets ...string) error {
 		draw.Draw(img, bounds, srcImg, image.Pt(0, 0), draw.Src)
 		images[i] = img
 
-		data := FaceResult{}
+		data := engine.FaceResult{}
 		err := json.Unmarshal([]byte(rawJsonBody), &data)
 		if err != nil {
 			fmt.Printf("[ERROR] JSON path:%s\t\terr:%s\n", path, err.Error())

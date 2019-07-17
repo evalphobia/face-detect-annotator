@@ -1,10 +1,11 @@
-package main
+package fda
 
 import (
 	"fmt"
 	"strings"
 	"sync"
 
+	"github.com/evalphobia/face-detect-annotator/engine"
 	"github.com/mkideal/cli"
 	"github.com/pkg/errors"
 )
@@ -33,89 +34,28 @@ var (
 func execDetector(ctx *cli.Context) error {
 	argv := ctx.Argv().(*detectorT)
 	conf := NewConfig()
-	conf.SetInputPath(argv.Input)
-	conf.SetOutputPath(argv.Output)
+	conf.setInputPath(argv.Input)
+	conf.setOutputPath(argv.Output)
 	for _, e := range strings.Split(argv.Engines, ",") {
-		if err := conf.SetUseEngineFromName(e); err != nil {
-			return errors.Wrap(err, "[ERROR] SetUseEngineFromName")
+		if err := conf.setUseEngineFromName(e); err != nil {
+			return errors.Wrap(err, "[ERROR] setUseEngineFromName")
 		}
 	}
 
-	engines, err := initEngines(conf)
+	engines, err := initEngines(conf, enabledEngines)
 	if err != nil {
 		return errors.Wrap(err, "[ERROR] initEngines")
 	}
 
 	switch {
-	case conf.IsCSVFilePath():
+	case conf.isCSVFilePath():
 		return detectFromCSV(engines, conf)
 	default:
 		return detectFromImage(engines, conf)
 	}
 }
 
-func initEngines(conf Config) ([]FaceDetector, error) {
-	var engines []FaceDetector
-	if conf.UseEngineOpenCV {
-		e, err := NewOpenCVFaceDetector(conf.GetOpenCVCascadeFile())
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if conf.UseEngineDlib {
-		e, err := NewDlibFaceDetector(conf.GetDlibModelDir())
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if conf.UseEngineRekognition {
-		e, err := NewRekognitionFaceDetector()
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if conf.UseEngineGoogleVision {
-		e, err := NewGoogleVisionFaceDetector()
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if conf.UseEngineAzureVision {
-		e, err := NewAzureVisionFaceDetector(conf.GetAzureRegion(), conf.AzureSubscriptionKey)
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if conf.UseEngineTensorFlow {
-		e, err := NewTensorFlowFaceDetector(conf.GetTensorFlowModelFile())
-		if err != nil {
-			return nil, err
-		}
-		engines = append(engines, e)
-	}
-
-	if len(engines) == 0 {
-		return nil, errors.New("Any face detect engine is specified")
-	}
-
-	for _, e := range engines {
-		fmt.Printf("[INFO] Use %s\n", e.String())
-	}
-
-	return engines, nil
-}
-
-func detectFromImage(engines []FaceDetector, conf Config) error {
+func detectFromImage(engines []engine.Engine, conf Config) error {
 	for _, e := range engines {
 		faceResult, err := e.Detect(conf.InputPath)
 		if err != nil {
@@ -126,7 +66,7 @@ func detectFromImage(engines []FaceDetector, conf Config) error {
 	return nil
 }
 
-func detectFromCSV(engines []FaceDetector, conf Config) error {
+func detectFromCSV(engines []engine.Engine, conf Config) error {
 	f, err := NewCSVHandler(conf.InputPath)
 	if err != nil {
 		return err
@@ -179,7 +119,7 @@ func detectFromCSV(engines []FaceDetector, conf Config) error {
 	return w.WriteAll(result)
 }
 
-func getHeader(engines []FaceDetector) string {
+func getHeader(engines []engine.Engine) string {
 	header := []string{
 		"path",
 		"count",
