@@ -16,7 +16,7 @@ type detectorT struct {
 	Input        string `cli:"*i,input" usage:"image dir path --input='/path/to/image_dir'"`
 	Output       string `cli:"*o,output" usage:"output TSV file path --output='./output.tsv'" dft:"./output.tsv"`
 	UseAllEngine bool   `cli:"a,all" usage:"use all engines"`
-	Engines      string `cli:"e,engine" usage:"comma separate Face Detect Engines --engine='opencv,dlib,tensorflow,rekognition,google,azure'" dft:"opencv,dlib,tensorflow"`
+	Engines      string `cli:"e,engine" usage:"comma separate Face Detect Engines --engine='opencv,dlib,pigo,tensorflow,rekognition,google,azure,face++'" dft:"opencv,dlib,pigo,tensorflow"`
 }
 
 var detector = &cli.Command{
@@ -33,7 +33,7 @@ var (
 
 func execDetector(ctx *cli.Context) error {
 	argv := ctx.Argv().(*detectorT)
-	conf := NewConfig()
+	conf := NewConfig(argv.UseAllEngine)
 	conf.setInputPath(argv.Input)
 	conf.setOutputPath(argv.Output)
 	for _, e := range strings.Split(argv.Engines, ",") {

@@ -20,8 +20,9 @@ func initEngines(conf Config, enabledEngines []engine.Engine) ([]engine.Engine, 
 		case e.String() == "azure" && conf.UseEngineAzureVision,
 			e.String() == "google" && conf.UseEngineGoogleVision,
 			e.String() == "rekognition" && conf.UseEngineRekognition,
-			e.String() == "dlib" && conf.UseEngineDlib,
+			e.String() == "face++" && conf.UseEngineFacePlusPlus,
 			e.String() == "pigo" && conf.UseEnginePigo,
+			e.String() == "dlib" && conf.UseEngineDlib,
 			e.String() == "opencv" && conf.UseEngineOpenCV,
 			e.String() == "tensorflow" && conf.UseEngineTensorFlow:
 			err := e.Init(conf)

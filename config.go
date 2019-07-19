@@ -13,6 +13,7 @@ const (
 	keyConfigEngineAzureVision  = "FDA_ENGINE_AZURE"
 	keyConfigEngineGoogleVision = "FDA_ENGINE_GOOGLE"
 	keyConfigEngineRekognition  = "FDA_ENGINE_REKOGNITION"
+	keyConfigEngineFacePlusPlus = "FDA_ENGINE_FACEPP"
 	keyConfigEnginePigo         = "FDA_ENGINE_PIGO"
 
 	// Extentions
@@ -46,6 +47,7 @@ type Config struct {
 	UseEngineAzureVision  bool
 	UseEngineGoogleVision bool
 	UseEngineRekognition  bool
+	UseEngineFacePlusPlus bool
 	UseEnginePigo         bool
 	UseEngineDlib         bool
 	UseEngineOpenCV       bool
@@ -59,20 +61,24 @@ type Config struct {
 	TensorFlowModelPath   string
 }
 
-func NewConfig() Config {
+func NewConfig(useAll bool) Config {
 	useAzure, _ := strconv.ParseBool(os.Getenv(keyConfigEngineAzureVision))
 	useGoogle, _ := strconv.ParseBool(os.Getenv(keyConfigEngineGoogleVision))
 	useRekognition, _ := strconv.ParseBool(os.Getenv(keyConfigEngineRekognition))
+	useFacePlusPlus, _ := strconv.ParseBool(os.Getenv(keyConfigEngineFacePlusPlus))
 	usePigo, _ := strconv.ParseBool(os.Getenv(keyConfigEnginePigo))
 	useDlib, _ := strconv.ParseBool(os.Getenv(keyConfigEngineDlib))
 	useOpenCV, _ := strconv.ParseBool(os.Getenv(keyConfigEngineOpenCV))
 	useTF, _ := strconv.ParseBool(os.Getenv(keyConfigEngineTensorFlow))
 
-	useAll, _ := strconv.ParseBool(os.Getenv(keyConfigEngineAll))
+	if !useAll {
+		useAll, _ = strconv.ParseBool(os.Getenv(keyConfigEngineAll))
+	}
 	if useAll {
 		useAzure = true
 		useGoogle = true
 		useRekognition = true
+		useFacePlusPlus = true
 		usePigo = true
 		useDlib = true
 		useOpenCV = true
@@ -83,6 +89,7 @@ func NewConfig() Config {
 		UseEngineAzureVision:  useAzure,
 		UseEngineGoogleVision: useGoogle,
 		UseEngineRekognition:  useRekognition,
+		UseEngineFacePlusPlus: useFacePlusPlus,
 		UseEnginePigo:         usePigo,
 		UseEngineDlib:         useDlib,
 		UseEngineOpenCV:       useOpenCV,
@@ -112,6 +119,8 @@ func (c *Config) setUseEngineFromName(name string) error {
 		c.UseEngineGoogleVision = true
 	case "rekognition":
 		c.UseEngineRekognition = true
+	case "face++":
+		c.UseEngineFacePlusPlus = true
 	case "pigo":
 		c.UseEnginePigo = true
 	case "dlib":

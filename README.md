@@ -26,7 +26,7 @@ face-detect-annotator
 [21]: https://bettercodehub.com/edge/badge/evalphobia/face-detect-annotator?branch=master
 [22]: https://bettercodehub.com/
 
-`face-detect-annotator` is a tool to detect faces from Image file by AWS Rekognition, Google Vision, Azure Computer Vision, OpenCV, Dlib, TensorFlow
+`face-detect-annotator` is a tool to detect faces from Image file by AWS Rekognition, Google Vision, Azure Computer Vision, Face++, OpenCV, Dlib, Pigo, TensorFlow
 
 
 # What's for?
@@ -92,7 +92,7 @@ Options:
   -i, --input                            *image dir path --input='/path/to/image_dir'
   -o, --output[=./output.tsv]            *output TSV file path --output='./output.tsv'
   -a, --all                               use all engines
-  -e, --engine[=opencv,dlib,tensorflow]   comma separate Face Detect Engines --engine='opencv,dlib,tensorflow,rekognition,google,azure'
+  -e, --engine[=opencv,dlib,tensorflow]   comma separate Face Detect Engines --engine='opencv,dlib,pigo,tensorflow,rekognition,google,azure,face++'
 ```
 
 For example, if you want to detect faces of images from the CSV file,
@@ -114,14 +114,18 @@ FDA_AZURE_SUBSCRIPTION_KEY=ZZZ \
 GOOGLE_APPLICATION_CREDENTIALS=$HOME/google/service_account.json \
 AWS_ACCESS_KEY_ID=XXX \
 AWS_SECRET_ACCESS_KEY=ZZZ \
-./face-detect-annotator detector -i ./input.csv -o ./output.tsv  -e="rekognition,google,azure,tensorflow,opencv,dlib"
+FACEPP_API_KEY=XXX \
+FACEPP_API_SECRET=ZZZ \
+./face-detect-annotator detector -i ./input.csv -o ./output.tsv  -e="rekognition,google,azure,face++,tensorflow,opencv,dlib,pigo"
 
 [INFO] Use rekognition
 [INFO] Use google
 [INFO] Use azure
+[INFO] Use face++
 [INFO] Use tensorflow
 [INFO] Use opencv
 [INFO] Use dlib
+[INFO] Use pigo
 exec #: [2]
 exec #: [1]
 exec #: [0]
@@ -203,3 +207,4 @@ This library depends on these awesome libraries,
 - Azure Computer Vision API: [github.com/Azure/azure-sdk-for-go](https://github.com/Azure/azure-sdk-for-go)
 - Google Vision API: [github.com/googleapis/google-api-go-client](https://github.com/googleapis/google-api-go-client)
 - AWS Rekognition: [github.com/aws/aws-sdk-go](https://github.com/aws/aws-sdk-go)
+- Face++: [evalphobia/go-face-plusplus](https://github.com/evalphobia/go-face-plusplus)

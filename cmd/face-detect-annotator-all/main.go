@@ -4,6 +4,7 @@ import (
 	fda "github.com/evalphobia/face-detect-annotator"
 	"github.com/evalphobia/face-detect-annotator/engine/azure"
 	"github.com/evalphobia/face-detect-annotator/engine/dlib"
+	"github.com/evalphobia/face-detect-annotator/engine/faceplusplus"
 	"github.com/evalphobia/face-detect-annotator/engine/google"
 	"github.com/evalphobia/face-detect-annotator/engine/opencv"
 	"github.com/evalphobia/face-detect-annotator/engine/pigo"
@@ -16,6 +17,7 @@ func main() {
 		&azure.AzureVisionFaceDetector{},
 		&google.GoogleVisionFaceDetector{},
 		&rekognition.RekognitionFaceDetector{},
+		&faceplusplus.FacePlusPlusFaceDetector{},
 		&pigo.PigoFaceDetector{},
 		&dlib.DlibFaceDetector{},
 		&opencv.OpenCVFaceDetector{},
