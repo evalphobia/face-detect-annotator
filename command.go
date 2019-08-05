@@ -10,6 +10,7 @@ import (
 func Run() {
 	if err := cli.Root(root,
 		cli.Tree(help),
+		cli.Tree(list),
 		cli.Tree(detector),
 		cli.Tree(annotator),
 	).Run(os.Args[1:]); err != nil {
